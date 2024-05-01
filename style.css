@@ -1,0 +1,19 @@
+#container{
+    text-align: center;
+    max-width: 400px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow:  0 0 10px rgba(0, 0, 0, 0.2);
+}
+#search{
+    padding: 10px;
+    width: 350px;
+}
+@media screen and (max-width: 768px) {
+    #search{
+    padding: 10px;
+    width: 190px;
+}   
+}
