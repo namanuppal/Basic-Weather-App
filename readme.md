@@ -14,6 +14,7 @@ This project is a simple Weather App built using HTML, CSS, and JavaScript. It a
 4. Press Enter or click outside the input field to get the weather information.
 
 ## Preview
+[Visit](https://checking-weather-status.netlify.app/)
 ![Weather App Preview](Preview1.png)
 ![Weather App Preview](Preview2.png)
 
