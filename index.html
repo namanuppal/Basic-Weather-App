@@ -7,14 +7,17 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div id="container">
+    <div class="container">
         <h1>Weather App</h1>
-        <input type="text" placeholder="Enter City Name" id="search">
+        <div class="search-container">
+            <input type="text" placeholder="Enter City Name" id="search">
+        </div>
         <div id="result">
-            <img id="imgFormat" src="" alt="">
+            <div id="weather-icon"></div>
+            <div id="weather-info"></div>
         </div>
     </div>
+    <script src="./config.js"></script>
+    <script src="./script.js"></script>
 </body>
-<script src="./config.js"></script>
-<script src="./script.js"></script>
 </html>

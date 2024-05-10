@@ -19,9 +19,16 @@ if(data.cod === 200){
     let weather = data.weather[0].description;
     let temperature = Math.floor(data.main.temp - 273.15);
     let humidity = data.main.humidity;
-    let minute = Math.floor(data.timezone / 3600);
-    let seconds = Math.floor((data.timezone % 3600) / 60);
-    let time = new Date().toLocaleTimeString();
+    let date = new Date().getDate()
+    let month = new Date().getMonth()
+    let months =  ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    let newMonth = months[month]
+    let year = new Date().getFullYear()
+    let day = new Date().getDay()
+    let days =  ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+    let newDay = days[day]
+    let windSpeed = data.wind.speed;
+    let pressure = data.main.pressure
 
     
     let img;
@@ -40,7 +47,19 @@ if(data.cod === 200){
     }
 
     
-    document.getElementById('result').innerHTML = `<img src=${img} width='100px'>  <h1 id='name'>${name}, ${country}</h1> <p>${weather.toUpperCase()}</p> <p id='temp'>Temperature: ${temperature}°C</p> <p>Humidity: ${humidity}°C</p> <p id='time'>${time}</p>`;
+    document.getElementById('result').innerHTML = `
+    <h1 id='name'>${name}, ${country}</h1> 
+    <p id='time'>${newDay}, ${date} ${newMonth} ${year}</p> 
+    <img class='weatherImage' src=${img}> 
+    <p id='temp'> ${temperature}°C</p> 
+    <p class="weather">${weather}</p> 
+    <div class='bottom-bar'>
+        <h5>Wind<p>${windSpeed}km/h</p></h5>
+        <h5>Pressure<p>${pressure}mbar</p></h5>
+        <h5>Humidity<p>${humidity}%</p></h5>
+    </div> 
+            
+    `;
 } else {
     document.getElementById('result').innerHTML = `No data`;
 }
