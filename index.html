@@ -1,23 +1,183 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Weather App</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <h1>Weather App</h1>
-        <div class="search-container">
-            <input type="text" placeholder="Enter City Name" id="search">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body
+    class="bg-gradient-to-br from-blue-400 to-purple-500 min-h-screen flex items-center justify-center p-4"
+  >
+    <div
+      class="bg-white bg-opacity-40 backdrop-blur-lg rounded-3xl p-6 md:p-8 max-w-md w-full shadow-lg transition-all duration-300 hover:shadow-xl"
+    >
+      <h1 class="text-3xl font-bold text-white mb-4">Weather App</h1>
+      <div class="search-container mb-4">
+        <input
+          type="text"
+          placeholder="Enter City Name"
+          id="search"
+          class="p-2 rounded-md w-full"
+        />
+      </div>
+      <div class="text-center mb-6">
+        <h2 class="text-2xl font-bold text-white mb-2" id="currentDate"></h2>
+        <p class="text-xl text-white" id="currentTime"></p>
+        <p class="text-lg text-white" id="location"></p>
+        <p
+          class="text-2xl font-bold text-white mb-2 capitalize"
+          id="weatherDescription"
+        ></p>
+        <img
+          src=""
+          alt="Weather conditions"
+          id="weatherImage"
+          class="mx-auto rounded-full w-24 h-24 md:w-32 md:h-32 object-cover shadow-lg mb-4 hidden border-4 border-white"
+        />
+      </div>
+      <div
+        id="result"
+        class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 hidden"
+      >
+        <div
+          class="bg-white bg-opacity-30 rounded-2xl p-4 text-center transition-all duration-300 hover:bg-opacity-40"
+          aria-label="Humidity"
+        >
+          <i class="fas fa-tint text-4xl text-blue-300 mb-2"></i>
+          <p class="text-lg font-semibold text-white">Humidity</p>
+          <p class="text-2xl font-bold text-white" id="humidity">--%</p>
         </div>
-        <div id="result">
-            <div id="weather-icon"></div>
-            <div id="weather-info"></div>
+        <div
+          class="bg-white bg-opacity-30 rounded-2xl p-4 text-center transition-all duration-300 hover:bg-opacity-40"
+          aria-label="Wind Speed"
+        >
+          <i class="fas fa-wind text-4xl text-green-300 mb-2"></i>
+          <p class="text-lg font-semibold text-white">Wind Speed</p>
+          <p class="text-2xl font-bold text-white" id="windSpeed">-- mph</p>
         </div>
+        <div
+          class="bg-white bg-opacity-30 rounded-2xl p-4 text-center transition-all duration-300 hover:bg-opacity-40"
+          aria-label="Pressure"
+        >
+          <i class="fas fa-compress-alt text-4xl text-red-300 mb-2"></i>
+          <p class="text-lg font-semibold text-white">Pressure</p>
+          <p class="text-2xl font-bold text-white" id="pressure">-- hPa</p>
+        </div>
+        <div
+          class="bg-white bg-opacity-30 rounded-2xl p-4 text-center transition-all duration-300 hover:bg-opacity-40"
+          aria-label="Temperature"
+        >
+          <i class="fas fa-thermometer-half text-4xl text-yellow-300 mb-2"></i>
+          <p class="text-lg font-semibold text-white">Temperature</p>
+          <p class="text-2xl font-bold text-white" id="temperature">--°F</p>
+        </div>
+      </div>
     </div>
     <script src="./config.js"></script>
-    <script src="./script.js"></script>
-</body>
+    <script>
+      function updateDateTime() {
+        const now = new Date();
+        document.getElementById("currentDate").textContent =
+          now.toLocaleDateString("en-US", {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+          });
+        document.getElementById("currentTime").textContent =
+          now.toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+          });
+      }
+
+      updateDateTime();
+      setInterval(updateDateTime, 1000);
+
+      document
+        .getElementById("search")
+        .addEventListener("keydown", function (event) {
+          if (event.key === "Enter") {
+            getWeatherInfo();
+          }
+        });
+
+      function getWeatherInfo() {
+        const city = document.getElementById("search").value;
+
+        fetch(
+          `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${APPID}`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            if (data.cod === 200) {
+              const name = data.name;
+              const country = data.sys.country;
+              const weather = data.weather[0].description;
+              const temperature = Math.floor(data.main.temp - 273.15);
+              const humidity = data.main.humidity;
+              const windSpeed = data.wind.speed;
+              const pressure = data.main.pressure;
+
+              const img = getWeatherImage(data.weather[0].main);
+
+              document.getElementById("result").classList.remove("hidden");
+              document.getElementById("humidity").textContent = `${humidity}%`;
+              document.getElementById(
+                "windSpeed"
+              ).textContent = `${windSpeed} mph`;
+              document.getElementById(
+                "pressure"
+              ).textContent = `${pressure} hPa`;
+              document.getElementById(
+                "temperature"
+              ).textContent = `${temperature}°C`;
+              document.getElementById("weatherImage").src = img;
+              document
+                .getElementById("weatherImage")
+                .classList.remove("hidden");
+              document.getElementById("weatherDescription").textContent =
+                weather;
+              document.getElementById(
+                "location"
+              ).textContent = `${name}, ${country}`;
+            } else {
+              alert("City not found");
+            }
+          })
+          .catch((e) => {
+            console.log("error", e);
+          });
+      }
+
+      function getWeatherImage(condition) {
+        switch (condition) {
+          case "Clouds":
+            return "https://cdn3.iconfinder.com/data/icons/weather-icons-2/64/Clouds-512.png";
+          case "Haze":
+            return "https://static-00.iconduck.com/assets.00/extreme-day-haze-icon-2048x1820-peahp82o.png";
+          case "Rain":
+            return "http://openweathermap.org/img/wn/10n@2x.png";
+          case "Snow":
+            return "http://openweathermap.org/img/wn/13n@2x.png";
+          case "Clear":
+            return "https://s3-alpha.figma.com/hub/file/2803345406/df2a8280-b65b-49da-b706-bed599bf2e0b-cover.png";
+          case "Storm":
+            return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS78xkDGTM9F09qGCjqWkjg0_NpgHa8kISI5mAxmiCLJQ&s";
+          default:
+            return "";
+        }
+      }
+    </script>
+  </body>
 </html>
